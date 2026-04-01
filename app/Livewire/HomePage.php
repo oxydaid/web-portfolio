@@ -17,8 +17,8 @@ class HomePage extends Component
     {
         return view('livewire.home-page', [
             // Mengambil 4 Skill utama untuk ditampilkan di Hero (dicache 1 jam)
-            'skills' => Cache::remember('home_skills', 3600, fn () => Skill::take(8)->get()), 
-            
+            'skills' => Cache::remember('home_skills', 3600, fn () => Skill::take(8)->get()),
+
             // Mengambil Service yang aktif (dicache 1 jam)
             'services' => Cache::remember('home_services', 3600, fn () => Service::where('is_active', true)
                 ->orderBy('sort_order')
@@ -31,7 +31,7 @@ class HomePage extends Component
                 ->orderBy('published_at', 'desc')
                 ->take(6)
                 ->get()),
-                
+
             'totalProjects' => Cache::remember('home_total_projects', 3600, fn () => Project::where('is_active', true)->count()),
 
             // Mengambil Experience (dicache 1 jam)

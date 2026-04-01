@@ -4,10 +4,11 @@ namespace App\Livewire;
 
 use App\Models\Project;
 use App\Models\Skill;
-use Livewire\Component;
-use Livewire\WithPagination;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Projects Archive')]
 class ProjectsPage extends Component
@@ -47,15 +48,15 @@ class ProjectsPage extends Component
 
         // Logic Pencarian
         if ($this->search) {
-            $query->where(function($q) {
-                $q->where('title', 'like', '%' . $this->search . '%')
-                  ->orWhere('content', 'like', '%' . $this->search . '%');
+            $query->where(function ($q) {
+                $q->where('title', 'like', '%'.$this->search.'%')
+                    ->orWhere('content', 'like', '%'.$this->search.'%');
             });
         }
 
         // Logic Filter by Skill Name
         if ($this->tech) {
-            $query->whereHas('skills', function($q) {
+            $query->whereHas('skills', function ($q) {
                 $q->where('name', $this->tech);
             });
         }
@@ -66,7 +67,7 @@ class ProjectsPage extends Component
             ->paginate(9); // 9 item per halaman
 
         // Ambil list skill yang hanya digunakan di project (untuk menu filter)
-        $skills = \Illuminate\Support\Facades\Cache::remember('filter_skills', 3600, function() {
+        $skills = Cache::remember('filter_skills', 3600, function () {
             return Skill::whereHas('projects')->orderBy('name')->get();
         });
 

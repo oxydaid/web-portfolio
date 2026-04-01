@@ -3,22 +3,21 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SkillResource\Pages;
-use App\Filament\Resources\SkillResource\RelationManagers;
 use App\Models\Skill;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SkillResource extends Resource
 {
     protected static ?string $model = Skill::class;
 
     protected static ?string $navigationIcon = 'lucide-lightbulb';
+
     protected static ?string $navigationGroup = 'Resume';
+
     protected static ?string $navigationLabel = 'Keampuan';
 
     public static function form(Form $form): Form

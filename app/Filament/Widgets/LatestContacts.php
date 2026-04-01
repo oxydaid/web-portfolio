@@ -10,9 +10,9 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class LatestContacts extends BaseWidget
 {
     protected static ?int $sort = 2; // Tampil di urutan kedua (bawah stats)
-    
+
     // Agar tabel memenuhi lebar layar dashboard
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {

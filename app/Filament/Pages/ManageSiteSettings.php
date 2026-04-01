@@ -3,17 +3,21 @@
 namespace App\Filament\Pages;
 
 use App\Settings\GeneralSettings;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Pages\Page;
-use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Illuminate\Support\HtmlString;
 
 class ManageSiteSettings extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+
     protected static ?string $navigationLabel = 'App Settings';
+
     protected static ?string $title = 'Pengaturan Situs & Profil';
+
     protected static string $view = 'filament.pages.manage-site-settings';
 
     // Property untuk menampung data form
@@ -105,8 +109,8 @@ class ManageSiteSettings extends Page
                                                     ->url()
                                                     ->required(),
                                             ])
-                                            ->columns(2)
-                                    ])
+                                            ->columns(2),
+                                    ]),
                             ]),
 
                         // TAB 3: APPEARANCE
@@ -129,12 +133,12 @@ class ManageSiteSettings extends Page
                                 // Optional: Preview visual sederhana agar admin tau ini gradient
                                 Forms\Components\Placeholder::make('preview')
                                     ->label('Preview Gradient')
-                                    ->content(fn(Forms\Get $get) => new \Illuminate\Support\HtmlString('
+                                    ->content(fn (Forms\Get $get) => new HtmlString('
                                     <div style="
                                         width: 100%; 
                                         height: 40px; 
                                         border-radius: 8px; 
-                                        background: linear-gradient(to right, ' . ($get('primary_color') ?? '#ccc') . ', ' . ($get('secondary_color') ?? '#ccc') . ');
+                                        background: linear-gradient(to right, '.($get('primary_color') ?? '#ccc').', '.($get('secondary_color') ?? '#ccc').');
                                 "></div>
                                 ')),
                             ]),

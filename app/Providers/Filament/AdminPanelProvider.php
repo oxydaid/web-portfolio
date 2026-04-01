@@ -2,23 +2,21 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Pages;
-use Filament\Panel;
-use Filament\Widgets;
-use Filament\PanelProvider;
 use App\Settings\GeneralSettings;
-use Filament\Support\Colors\Color;
-use Illuminate\Support\Facades\Storage;
 use Filament\Http\Middleware\Authenticate;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Filament\Pages;
+use Filament\Panel;
+use Filament\PanelProvider;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -37,12 +35,12 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName(fn () => app(GeneralSettings::class)->site_name)
-            ->brandLogo(fn () => app(GeneralSettings::class)->site_logo 
-                ? Storage::url(app(GeneralSettings::class)->site_logo) 
+            ->brandLogo(fn () => app(GeneralSettings::class)->site_logo
+                ? Storage::url(app(GeneralSettings::class)->site_logo)
                 : null)
-            ->brandLogoHeight('2.5rem') 
-            ->favicon(fn () => app(GeneralSettings::class)->site_favicon 
-                ? Storage::url(app(GeneralSettings::class)->site_favicon) 
+            ->brandLogoHeight('2.5rem')
+            ->favicon(fn () => app(GeneralSettings::class)->site_favicon
+                ? Storage::url(app(GeneralSettings::class)->site_favicon)
                 : null)
             ->colors([
                 'primary' => $primaryColor,

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Project extends Model
 {
     // Mengizinkan semua kolom diisi (praktis untuk Filament)
-    protected $guarded = []; 
+    protected $guarded = [];
 
     protected $casts = [
         'is_active' => 'boolean',

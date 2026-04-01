@@ -10,16 +10,17 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('contacts', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->string('email');
-        $table->text('message');
-        $table->timestamp('read_at')->nullable(); // Penanda sudah dibaca admin
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('contacts', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email');
+            $table->text('message');
+            $table->timestamp('read_at')->nullable(); // Penanda sudah dibaca admin
+            $table->timestamps();
+        });
+    }
+
     /**
      * Reverse the migrations.
      */

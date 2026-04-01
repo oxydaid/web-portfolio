@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Models\Contact;
 use App\Mail\ContactFormMail;
+use App\Models\Contact;
 use App\Settings\GeneralSettings;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -12,8 +12,11 @@ use Livewire\Component;
 class ContactForm extends Component
 {
     public $name;
+
     public $email;
+
     public $message;
+
     public $success = false; // Status untuk menampilkan pesan sukses
 
     // Aturan validasi
@@ -41,7 +44,7 @@ class ContactForm extends Component
                 Mail::to($settings->email)->send(new ContactFormMail($contact));
             } catch (\Exception $e) {
                 // Log error jika gagal kirim email
-                Log::error('Gagal kirim email contact form: ' . $e->getMessage());
+                Log::error('Gagal kirim email contact form: '.$e->getMessage());
             }
         }
 

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ExperienceResource\Pages;
-use App\Filament\Resources\ExperienceResource\RelationManagers;
 use App\Models\Experience;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -11,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ExperienceResource extends Resource
 {
@@ -24,50 +21,49 @@ class ExperienceResource extends Resource
 
     protected static ?string $navigationLabel = 'Pengalaman';
 
-
     public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
-            Section::make()
-                ->schema([
-                    
-                    Forms\Components\TextInput::make('company_name')
-                        ->required(),
-                    Forms\Components\TextInput::make('role')
-                        ->label('Posisi / Jabatan')
-                        ->required(),
-                    Forms\Components\Select::make('type')
-                        ->options([
-                            'work' => 'Pekerjaan',
-                            'education' => 'Pendidikan',
-                        ])
-                        ->required(),
-                    
-                    Forms\Components\Grid::make(2)
-                        ->schema([
-                            Forms\Components\DatePicker::make('start_date')->required(),
-                            Forms\Components\DatePicker::make('end_date')
-                                ->label('Sampai Tanggal')
-                                ->hidden(fn (Forms\Get $get) => $get('is_current')), // Sembunyikan jika "Masih Bekerja"
-                        ]),
-                    
-                    Forms\Components\Toggle::make('is_current')
-                        ->label('Masih bekerja/sekolah disini?')
-                        ->live(), // Agar field end_date bisa bereaksi real-time
-        
-                    Forms\Components\Textarea::make('description')
-                        ->columnSpanFull(),
-                ])->columns(2),
-        ]);
-}
+    {
+        return $form
+            ->schema([
+                Section::make()
+                    ->schema([
+
+                        Forms\Components\TextInput::make('company_name')
+                            ->required(),
+                        Forms\Components\TextInput::make('role')
+                            ->label('Posisi / Jabatan')
+                            ->required(),
+                        Forms\Components\Select::make('type')
+                            ->options([
+                                'work' => 'Pekerjaan',
+                                'education' => 'Pendidikan',
+                            ])
+                            ->required(),
+
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\DatePicker::make('start_date')->required(),
+                                Forms\Components\DatePicker::make('end_date')
+                                    ->label('Sampai Tanggal')
+                                    ->hidden(fn (Forms\Get $get) => $get('is_current')), // Sembunyikan jika "Masih Bekerja"
+                            ]),
+
+                        Forms\Components\Toggle::make('is_current')
+                            ->label('Masih bekerja/sekolah disini?')
+                            ->live(), // Agar field end_date bisa bereaksi real-time
+
+                        Forms\Components\Textarea::make('description')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+            ]);
+    }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('company_name')
-                ->label('Institusi / Perusahaan')
+                    ->label('Institusi / Perusahaan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('role')
 
