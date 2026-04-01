@@ -16,7 +16,8 @@ class ProjectDetail extends Component
         $this->slug = $slug;
 
         // Cari project aktif berdasarkan slug, jika tidak ada -> 404
-        $this->project = Project::where('slug', $slug)
+        $this->project = Project::with('skills')
+            ->where('slug', $slug)
             ->where('is_active', true)
             ->firstOrFail();
     }

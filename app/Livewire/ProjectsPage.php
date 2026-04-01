@@ -66,7 +66,9 @@ class ProjectsPage extends Component
             ->paginate(9); // 9 item per halaman
 
         // Ambil list skill yang hanya digunakan di project (untuk menu filter)
-        $skills = Skill::whereHas('projects')->orderBy('name')->get();
+        $skills = \Illuminate\Support\Facades\Cache::remember('filter_skills', 3600, function() {
+            return Skill::whereHas('projects')->orderBy('name')->get();
+        });
 
         return view('livewire.projects-page', [
             'projects' => $projects,
