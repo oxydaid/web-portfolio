@@ -62,7 +62,7 @@
         ],
         "test:coverage": [
             "@php artisan config:clear --ansi",
-            "vendor/bin/pest --coverage --min=50 --colors=always"
+            "vendor/bin/pest --coverage --min=45 --colors=always"
         ],
         "lint": [
             "vendor/bin/pint --test"

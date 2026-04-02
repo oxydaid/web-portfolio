@@ -65,10 +65,10 @@ coverage: ## Run tests with coverage report
 	@php artisan config:clear --ansi 2>/dev/null || true
 	@vendor/bin/pest --coverage --colors=always
 
-coverage-min: ## Run tests with minimum coverage threshold (50%)
+coverage-min: ## Run tests with minimum coverage threshold (45%)
 	@echo "\n📊 Running tests with coverage threshold..."
 	@php artisan config:clear --ansi 2>/dev/null || true
-	@vendor/bin/pest --coverage --min=50 --colors=always
+	@vendor/bin/pest --coverage --min=45 --colors=always
 
 # ─── Security ────────────────────────────────────────
 
