@@ -1,6 +1,6 @@
 @inject('settings', 'App\Settings\GeneralSettings')
 
-<div class="pt-32 pb-20 min-h-screen relative overflow-hidden">
+<div class="pt-32 pb-20 min-h-screen relative overflow-hidden" data-projects-page>
     
     <!-- Background Decor -->
     <div class="absolute top-0 right-0 w-125 h-125 bg-secondary/10 rounded-full blur-[120px] -z-10"></div>
@@ -9,7 +9,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <!-- HEADER & CONTROLS -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12" data-projects-header>
             <div>
                 <div class="flex items-center gap-2 mb-2">
                     <span class="h-px w-8 bg-primary"></span>
@@ -36,7 +36,7 @@
         </div>
 
         <!-- FILTER TABS -->
-        <div class="mb-12 overflow-x-auto pb-4">
+        <div class="mb-12 overflow-x-auto pb-4" data-projects-filters>
             <div class="flex flex-wrap gap-2">
                 <!-- Tombol ALL -->
                 <button wire:click="$set('tech', '')" 
@@ -61,9 +61,9 @@
 
         <!-- RESULTS GRID -->
         @if($projects->count() > 0)
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" data-projects-grid>
                 @foreach($projects as $project)
-                <article class="group relative bg-dark-900 border border-white/10 hover:border-primary/50 transition-all duration-300 flex flex-col h-full overflow-hidden">
+                <article class="group relative bg-dark-900 border border-white/10 hover:border-primary/50 transition-all duration-300 flex flex-col h-full overflow-hidden" data-project-card>
                     <!-- Image -->
                      <a href="{{ route('project.detail', $project->slug) }}" class="block relative h-48 overflow-hidden bg-black">
                         <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity z-10 mix-blend-overlay"></div>
@@ -116,7 +116,7 @@
 
         @else
             <!-- EMPTY STATE -->
-            <div class="text-center py-20 border border-dashed border-white/10 rounded-lg bg-white/5">
+            <div class="text-center py-20 border border-dashed border-white/10 rounded-lg bg-white/5" data-projects-empty>
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-dark-800 mb-4">
                     <i class="fa-solid fa-database text-slate-500 text-2xl"></i>
                 </div>

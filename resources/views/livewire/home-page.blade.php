@@ -1,8 +1,8 @@
 @inject('settings', 'App\Settings\GeneralSettings')
 
-<div>
+<div data-home-page>
     <!-- HERO SECTION -->
-    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden z-10">
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden z-10" data-home-hero>
         <!-- Abstract Sci-Fi Blobs -->
         <div class="absolute top-20 right-0 w-125 h-125 bg-primary/10 rounded-full blur-[100px] animate-pulse-slow"></div>
         <div class="absolute bottom-0 left-0 w-125 h-125 bg-secondary/10 rounded-full blur-[100px]"></div>
@@ -11,7 +11,7 @@
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 
                 <!-- Text Content -->
-                <div class="text-center lg:text-left">
+                <div class="text-center lg:text-left" data-home-hero-text>
                     <!-- Status Badge -->
                     <div class="inline-flex items-center gap-3 px-4 py-1.5 border border-primary/30 bg-primary/5 mb-8 clip-cut-corner-reverse">
                         <span class="relative flex h-3 w-3">
@@ -56,7 +56,7 @@
                         <p class="text-xs font-bold text-primary font-display tracking-[0.3em] mb-4">MAINFRAME STACK</p>
                         <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
                             @foreach($skills as $skill)
-                                <div class="px-4 py-2 border border-white/10 bg-dark-900/50 flex items-center gap-2 hover:border-primary/50 transition-colors">
+                                <div class="px-4 py-2 border border-white/10 bg-dark-900/50 flex items-center gap-2 hover:border-primary/50 transition-colors" data-home-tech-item>
                                     @if($skill->icon)
                                         <img src="{{ Storage::url($skill->icon) }}" class="w-4 h-4 object-contain" alt="{{ $skill->name }}">
                                     @else
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Hero Visual -->
-                <div class="relative lg:h-150 flex items-center justify-center z-10 mt-12 lg:mt-0">
+                <div class="relative lg:h-150 flex items-center justify-center z-10 mt-12 lg:mt-0" data-home-hero-visual>
                     <div class="relative w-full max-w-md aspect-4/5">
                         <!-- Holographic Borders -->
                         <div class="absolute inset-0 border-2 border-primary/30 clip-cut-corner"></div>
@@ -111,9 +111,9 @@
     </section>
 
     <!-- SERVICES SECTION -->
-    <section id="services" class="py-24 bg-dark-900/50 relative border-y border-white/5">
+    <section id="services" class="py-24 bg-dark-900/50 relative border-y border-white/5" data-home-services>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-end justify-between mb-16">
+            <div class="flex items-end justify-between mb-16" data-home-services-header>
                 <div>
                     <h2 class="text-4xl font-display font-bold text-white">SYSTEM <span class="text-primary">CAPABILITIES</span></h2>
                     <div class="h-1 w-20 bg-primary mt-2"></div>
@@ -125,7 +125,7 @@
 
             <div class="grid md:grid-cols-3 gap-8">
                 @foreach($services as $service)
-                <div class="group relative p-1">
+                <div class="group relative p-1" data-home-service-card>
                     <div class="absolute inset-0 bg-linear-to-br from-primary via-transparent to-secondary opacity-20 group-hover:opacity-100 transition-opacity duration-500 clip-cut-corner"></div>
                     
                     <div class="relative h-full bg-dark-950 p-8 clip-cut-corner border border-white/10 group-hover:border-transparent transition-all">
@@ -151,15 +151,15 @@
     </section>
 
     <!-- EXPERIENCE SECTION -->
-    <section id="experience" class="py-24 relative z-10">
+    <section id="experience" class="py-24 relative z-10" data-home-experience>
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16" data-home-experience-header>
                  <h2 class="text-4xl font-display font-bold text-white">CAREER <span class="text-secondary">LOGS</span></h2>
             </div>
 
             <div class="relative border-l-2 border-white/10 ml-4 md:ml-0 space-y-12">
                 @foreach($experiences as $exp)
-                <div class="relative pl-8 md:pl-16 group">
+                <div class="relative pl-8 md:pl-16 group" data-home-exp-item>
                     <!-- Dot Indicator -->
                     <div class="absolute -left-27.5 top-1 w-6 h-6 bg-dark-950 border-2 {{ $loop->first ? 'border-primary' : 'border-secondary' }} flex items-center justify-center group-hover:scale-125 transition-transform">
                         <div class="w-2 h-2 {{ $loop->first ? 'bg-primary' : 'bg-secondary' }}"></div>
@@ -182,10 +182,10 @@
     </section>
 
     <!-- PROJECTS SECTION -->
-    <section id="projects" class="py-24 bg-dark-800/20 border-t border-white/5">
+    <section id="projects" class="py-24 bg-dark-800/20 border-t border-white/5" data-home-projects>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4" data-home-projects-header>
                 <div>
                     <h2 class="text-4xl font-display font-bold text-white mb-2">DEPLOYED <span class="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">PROJECTS</span></h2>
                     <p class="text-slate-400 font-mono text-sm">/// SELECT_FILE_TO_VIEW</p>
@@ -200,7 +200,7 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($projects as $project)
-                <article class="group relative bg-dark-900 border border-white/10 hover:border-primary/50 transition-all duration-300 flex flex-col h-full overflow-hidden">
+                <article class="group relative bg-dark-900 border border-white/10 hover:border-primary/50 transition-all duration-300 flex flex-col h-full overflow-hidden" data-home-project-card>
                     <!-- Image -->
                      <a href="{{ route('project.detail', $project->slug) }}">
                          <div class="relative h-48 overflow-hidden bg-black">
@@ -266,10 +266,10 @@
     </section>
 
     <!-- CONTACT SECTION -->
-    <section id="contact" class="py-24 relative overflow-hidden">
+    <section id="contact" class="py-24 relative overflow-hidden" data-home-contact>
         <div class="absolute inset-0 bg-linear-to-t from-primary/10 to-transparent pointer-events-none"></div>
 
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10" data-home-contact-content>
             <h2 class="text-4xl font-display font-bold text-white mb-6">INITIALIZE <span class="text-primary">COLLABORATION?</span></h2>
             <p class="text-xl text-slate-400 mb-12">Ready to deploy your next big idea. Transmission channels are open.</p>
             
@@ -279,7 +279,7 @@
             <!-- Social Icons -->
              <div class="flex justify-center gap-6 mt-16 pt-8 border-t border-white/5">
                 @foreach($settings->social_links ?? [] as $social)
-                    <a href="{{ $social['url'] }}" target="_blank" class="text-slate-500 hover:text-primary transition-colors transform hover:scale-110">
+                    <a href="{{ $social['url'] }}" target="_blank" class="text-slate-500 hover:text-primary transition-colors transform hover:scale-110" data-home-social-link>
                          @if($social['platform'] == 'github') <i class="fa-brands fa-github w-6 h-6"></i>
                         @elseif($social['platform'] == 'linkedin') <i class="fa-brands fa-linkedin w-6 h-6"></i>
                         @elseif($social['platform'] == 'instagram') <i class="fa-brands fa-instagram w-6 h-6"></i>
