@@ -61,6 +61,8 @@ class ProjectResource extends Resource
                         Forms\Components\Section::make('Meta & Media')
                             ->schema([
                                 Forms\Components\FileUpload::make('thumbnail')
+                                    ->preserveFilenames()
+                                    ->acceptedFileTypes(['image/webp'])
                                     ->image()
                                     ->directory('projects')
                                     ->required(),

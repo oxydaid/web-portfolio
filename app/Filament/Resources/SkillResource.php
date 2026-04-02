@@ -43,6 +43,7 @@ class SkillResource extends Resource
                 // Upload Icon (SVG/PNG)
                 Forms\Components\FileUpload::make('icon')
                     ->image()
+                    ->acceptedFileTypes(['image/svg+xml', 'image/webp', 'image/ico'])
                     ->disk('public')
                     ->directory('skills') // folder di storage/app/public/skills
                     ->preserveFilenames(),

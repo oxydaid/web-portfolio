@@ -60,9 +60,11 @@ class ManageSiteSettings extends Page
                                     ->rows(3)
                                     ->columnSpanFull(),
                                 Forms\Components\FileUpload::make('site_logo')
+                                    ->preserveFilenames()
                                     ->image()
                                     ->directory('settings'),
                                 Forms\Components\FileUpload::make('site_favicon')
+                                    ->preserveFilenames()
                                     ->image()
                                     ->directory('settings'),
                             ])->columns(2),
@@ -77,6 +79,7 @@ class ManageSiteSettings extends Page
                                         Forms\Components\TextInput::make('dev_title'),
                                     ]),
                                 Forms\Components\FileUpload::make('dev_avatar')
+                                    ->preserveFilenames()
                                     ->avatar()
                                     ->imageEditor()
                                     ->directory('settings'),
