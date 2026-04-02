@@ -1,0 +1,254 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ════════════════════════════════════════════
+  # 1. Code Quality - Linting & Formatting
+  # ════════════════════════════════════════════
+  code-quality:
+    name: "🔍 Code Quality"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress
+
+      - name: "🎨 Check code style (Laravel Pint)"
+        run: vendor/bin/pint --test
+
+      - name: "📐 Static Analysis (PHPStan)"
+        run: vendor/bin/phpstan analyse --memory-limit=512M --no-progress
+
+  # ════════════════════════════════════════════
+  # 2. Unit Tests
+  # ════════════════════════════════════════════
+  unit-tests:
+    name: "🧪 Unit Tests"
+    runs-on: ubuntu-latest
+    needs: code-quality
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          coverage: xdebug
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: "🧪 Run Unit Tests"
+        run: vendor/bin/pest --testsuite=Unit --colors=always
+
+  # ════════════════════════════════════════════
+  # 3. Feature Tests
+  # ════════════════════════════════════════════
+  feature-tests:
+    name: "🧩 Feature Tests"
+    runs-on: ubuntu-latest
+    needs: code-quality
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          coverage: xdebug
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: "🧩 Run Feature Tests"
+        run: vendor/bin/pest --testsuite=Feature --colors=always
+
+  # ════════════════════════════════════════════
+  # 4. Security Audit
+  # ════════════════════════════════════════════
+  security:
+    name: "🔒 Security Audit"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress
+
+      - name: "🔒 Composer Audit (PHP Dependencies)"
+        run: composer audit --format=plain
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: "🔒 NPM Audit (JS Dependencies)"
+        run: npm audit --audit-level=high || true
+
+      - name: "🔍 Check for exposed secrets"
+        run: |
+          echo "Checking for potential secrets in codebase..."
+          # Check for hardcoded passwords/keys in PHP files
+          if grep -rn --include="*.php" -E "(password\s*=\s*['\"][^'\"]+['\"]|api_key\s*=\s*['\"][^'\"]+['\"]|secret\s*=\s*['\"][^'\"]+['\"])" app/ config/ --exclude-dir=vendor 2>/dev/null | grep -v "env(" | grep -v "config(" | grep -v "// " | grep -v "password_verify" | grep -v "password_hash" | grep -v "\$fillable" | grep -v "\$hidden" | grep -v "'password'" | head -20; then
+            echo "⚠️  Potential hardcoded secrets found (review above)"
+          else
+            echo "✅ No obvious hardcoded secrets detected"
+          fi
+
+      - name: "🔍 Check .env.example for leaked secrets"
+        run: |
+          echo "Checking .env.example for potential secrets..."
+          # Real passwords/keys should not be in .env.example
+          if grep -E "^(APP_KEY=base64:|DB_PASSWORD=[^n\s].{7,}|MAIL_PASSWORD=[^n\s].{7,})" .env.example 2>/dev/null; then
+            echo "⚠️  .env.example may contain real secrets!"
+            exit 1
+          else
+            echo "✅ .env.example looks clean"
+          fi
+
+  # ════════════════════════════════════════════
+  # 5. Full Test Suite with Coverage
+  # ════════════════════════════════════════════
+  full-test-coverage:
+    name: "📊 Full Tests + Coverage"
+    runs-on: ubuntu-latest
+    needs: [unit-tests, feature-tests, security]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          coverage: xdebug
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-progress
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: "📊 Run All Tests with Coverage"
+        run: vendor/bin/pest --coverage --min=50 --colors=always
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7

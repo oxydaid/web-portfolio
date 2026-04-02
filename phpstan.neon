@@ -1,0 +1,22 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+
+    # Level 5 is a good balance between strictness and practicality
+    level: 5
+
+    # Exclude generated/vendor-specific paths
+    excludePaths:
+        - app/Providers/Filament/
+
+    # Ignore specific errors that are common in Laravel/Filament
+    ignoreErrors:
+        -
+            message: '#Access to an undefined property#'
+            path: app/Filament/Pages/ManageSiteSettings.php
+
+    # Don't report unused ignoreErrors patterns
+    reportUnmatchedIgnoredErrors: false
